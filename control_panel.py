@@ -173,7 +173,7 @@ class MyWindow(rabi_daq_ui.Ui_Form, QWidget):
         self.save_plot_data_btn.clicked.connect(self.save_plot_data)
 
         # infinite line signal
-        self.data_infinite_line.sigPositionChangeFinished.connect(self.reset_infinite_line_spbx_value)
+        # self.data_infinite_line.sigPositionChangeFinished.connect(self.reset_infinite_line_spbx_value)
 
     def save_plot_data(self):
         
@@ -273,13 +273,13 @@ class MyWindow(rabi_daq_ui.Ui_Form, QWidget):
         self.rabi_stop_btn.clicked.connect(self.rabi_stop)
     def rabi_stop(self):
 
-        self.pulser.reset()
-        self.task.stop()
+        # self.pulser.reset()
+        # self.task.stop()
         self._stopConstant = True
         gc.collect()
         
     def rabi_start(self):
-
+        self.repeat_spbx.setValue(0)
         self.pulser.reset()
         self.task.start()
         self._data_container = []
@@ -322,8 +322,10 @@ class MyWindow(rabi_daq_ui.Ui_Form, QWidget):
                 # gc.collect()
 
             if self._stopConstant == True:
-                self.pulser.reset()
+
                 self.task.stop()
+                time.sleep(0.5)
+                self.pulser.reset()
                 break
     def configure_pulse(self):
         mw_start = int(self.mw_start_spbx.value()) # in ns
@@ -339,6 +341,7 @@ class MyWindow(rabi_daq_ui.Ui_Form, QWidget):
         return {
             'mw_start':mw_start,
             'mw_gate':mw_gate,
+            'mw_step':mw_step,
             'laser_start':laser_start,
             'laser_gate':laser_gate,
             'daq_high':daq_high,
